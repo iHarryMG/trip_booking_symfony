@@ -1,0 +1,82 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html, body {
+            background-color: #fff;
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+        }
+        .splash_info{
+            width: 100%;
+            text-align: center;
+            font-family: Roboto Condensed;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .copyright-content{
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            left: 0;
+        }
+        .copyright{
+            text-align: center;
+            margin: 0;
+        }
+        .uk-progress{
+            width: 250px;
+            margin: auto;
+            margin-top: 30px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<div class="col-12 col-md-12">
+    <img src="../../leisure/images/logo_blue.jpg" class="center"/>
+    <div class="splash_info">
+        Welcome to Trip Booking.
+    </div>
+    <progress id="js-progressbar" class="uk-progress" value="10" max="200"></progress>
+</div>
+<div class="copyright-content clearfix">
+    <div class="widget">
+        <p class="copyright hidden-xs hidden-sm">©All rights reserved<br/> Bayarmagnai 2019-{{year}}</p>
+    </div>					
+</div>
+<form id="forward_to_home" action="{{ path('home') }}" method="post">
+    <input type="hidden" name="code" value="{{code}}" />
+</form>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            
+            UIkit.util.ready(function () {
+                var bar = document.getElementById('js-progressbar');
+                var animate = setInterval(function () {
+                    bar.value += 10;
+                }, 100);
+
+            });
+            
+            setTimeout(function(){
+                $('#forward_to_home').submit();
+            }, 2000);
+        });
+        
+    </script>
+{% endblock %}

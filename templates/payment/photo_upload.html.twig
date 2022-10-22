@@ -1,0 +1,253 @@
+{% extends 'main/layout.html.twig' %}
+    
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/css/hotel_detail.css">
+    <style>
+        .wrapper, .uk-modal-header{
+            height: 120%;
+        }
+        #modal-content{
+            margin: auto;
+        }
+        .jumbotron p{
+            margin: 0;
+            padding: 0;            
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+        }
+        .wrapper, .uk-modal-header {
+            height: -webkit-fill-available;
+        }
+        .uk-button-primary{
+            color: #fff!important;
+        }
+        #image_list img{
+            width: 30%;
+            margin: 10px;
+        }
+        #image_list ul{
+            list-style: none;
+        }
+        #image_list ul li{
+            float: left;
+        }
+        .uk-margin{
+            margin-bottom: 0;
+        }
+        .uk-margin input{
+            margin: 5px 0 5px 5px;
+        }
+        .jumbotron table{
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block navbar %}  
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="top-search">
+                <a href="{{ path('get_room_list', {hotel_id: hotel_id, trip_id: trip_id, is_special: is_special, adult_count: adult_count, children_count: children_count, children_age: children_age} ) }}" class="search-toggle"><i class="fa fa-arrow-left fa-lg"></i></a>
+            </div>
+            <div class="header-brand-logo">
+                <p>Upload passport photo</p>
+            </div>
+        </nav>
+    </header>
+{% endblock %} 
+
+{% block body %}
+    
+<div class="jumbotron col-12 col-md-12">
+    <p><span uk-icon="info"></span> You must submit passport photos for all travelers to make a booking.</p>
+</div>
+<div class="jumbotron col-12 col-md-12">
+    <p><span uk-icon="image"></span> Valid file types (JPG,JPEG,PNG)</p>
+</div>
+
+<form action="{{ path('upload_photo') }}" id="form_passport_photo" name="form_passport_photo" method="POST" enctype="multipart/form-data">
+    {% if upload_success != true %}
+        <div class="jumbotron col-12 col-md-12">
+            <table>
+                <th style="color: #0075FF; font-weight: normal;" colspan="2">
+                    Main page of the passport /Mandatory/
+                </th>
+            {% set photo_count = 0 %}
+            {% if person_count is not null %}
+                {% for i in 1..person_count %}
+                    <tr>
+                        <td style="width:15%;">No {{i}} </td>
+                        <td style="width:85%;">
+                            {#<input type="file" id="passport_photo_{{i}}" name="passport_photo_{{i}}" required="required" accept="image/*" style="margin: 5px 0 5px 5px;">#}
+                            <div class="uk-margin" uk-margin>
+                                <div uk-form-custom="target: true" class="uk-form-custom uk-first-column">
+                                    <input type="file" id="passport_photo_{{i}}" name="passport_photo_{{i}}" accept="image/*" capture="camera">
+                                    <input class="uk-input uk-form-width-medium" type="text" placeholder="Choose photo">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% set photo_count = photo_count + 1 %}
+                {% endfor %}
+            {% endif %}
+            </table>
+        </div>
+        <div class="jumbotron col-12 col-md-12">        
+            <table>
+                <th style="color: #333; font-weight: normal;" colspan="2">
+                    If your passport has been extended, please include a photo of the extension page.
+                </th>
+            {% if person_count is not null %}
+                {% for i in (person_count+1)..(person_count*2) %}
+                    <tr>
+                        <td style="width:15%;">No {{i}} </td>
+                        <td style="width:85%;">
+                            {#<input type="file" id="passport_photo_{{i}}" name="passport_photo_{{i}}" accept="image/*" style="margin: 5px 0 5px 5px;">#}
+                            <div class="uk-margin" uk-margin>
+                                <div uk-form-custom="target: true" class="uk-form-custom uk-first-column">
+                                    <input type="file" id="passport_photo_{{i}}" name="passport_photo_{{i}}" accept="image/*" capture="camera">
+                                    <input class="uk-input uk-form-width-medium" type="text" placeholder="Choose photo">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% set photo_count = photo_count + 1 %}
+                {% endfor %}
+            {% endif %}
+            </table>
+        </div>    
+        <div class="jumbotron col-12 col-md-12">  
+            <a id="photo_upload" name="photo_upload" class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom">
+                Submit
+            </a>
+        </div>
+    
+        <input type="hidden" name="adult_count" id="adult_count" value="{{adult_count}}" />
+        <input type="hidden" name="children_count" id="children_count" value="{{children_count}}" />
+        <input type="hidden" name="children_age" id="children_age" value="{{children_age}}" />
+        <input type="hidden" name="person_count" value="{{person_count}}">
+        <input type="hidden" name="params" id="params" value="{{params}}" />
+        
+        <input type="hidden" name="photo_count" value="{{photo_count}}">
+        <input type="hidden" name="trip_id" id="trip_id" value="{{trip_id}}" />
+        <input type="hidden" name="hotel_id" id="hotel_id" value="{{hotel_id}}" />
+        <input type="hidden" name="is_special" id="is_special" value="{{is_special}}" />
+        
+        
+    {% endif %}
+</form>
+
+{% if upload_success == true %}
+    <form id="form_confirm" action="{{ path('payment_confirm') }}" method="POST">
+        <input type="hidden" name="total_amount" id="total_amount" value="" />
+        <input type="hidden" name="invoice_number" id="invoice_number" value="" />
+        <input type="hidden" name="qr_string" id="qr_string" value="" />
+        <input type="hidden" name="qr_link" id="qr_link" value="" />
+
+        <input type="hidden" name="car_id" id="car_id" value="" />
+        <input type="hidden" name="car_way" id="car_way" value="" />
+        <input type="hidden" name="car_direction" id="car_direction" value="" />
+        <input type="hidden" name="car_adult_price" id="car_adult_price" value="" />
+        <input type="hidden" name="car_child_price" id="car_child_price" value="" />
+        <input type="hidden" name="car_total_amount" id="car_total_amount" value="" />
+
+        <input type="hidden" name="user_id" id="user_id" value="{{user_id}}" />
+        <input type="hidden" name="adult_count" id="adult_count" value="{{adult_count}}" />
+        <input type="hidden" name="children_count" id="children_count" value="{{children_count}}" />
+        <input type="hidden" name="children_age" id="children_age" value="{{children_age}}" />
+        <input type="hidden" name="params" id="params" value="{{params}}" />
+        <input type="hidden" name="trip_id" id="trip_id" value="{{trip_id}}" />
+        <input type="hidden" name="hotel_id" id="hotel_id" value="{{hotel_id}}" />
+        <input type="hidden" name="is_special" id="is_special" value="{{is_special}}" />
+    </form>
+    
+{% endif %}
+    <div id="loading_cover" class="uk-flex-top" uk-modal>
+        <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <p>Submitting photos. Please wait...</p>
+            <div uk-spinner></div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            {% if upload_success == true %}
+                var params = JSON.parse($("#params").val());
+                createInvoice(params['select_rooms'], params['car_id']);
+            {% elseif upload_success is not null and upload_success != true %}
+                UIkit.modal.alert('Couldn't upload passport photos. Please try again.');
+            {% endif %}
+                
+                
+            $("#photo_upload").click(function(){
+                var person_count = {{person_count}};
+                var pass = true;
+                for(i=0; i<person_count; i++){
+                    if ($('#passport_photo_'+(i+1)).get(0).files.length === 0){
+                        pass = false;
+                        UIkit.modal.alert("Not enough passport photos. Please submit "+(person_count-i)+" more person's passport photos.");
+                        break;
+                    }
+                }
+                
+                if(pass === true){
+                    UIkit.modal("#loading_cover").show();
+                    $("#form_passport_photo").submit();
+                }
+            });
+            
+                
+        });
+        
+        function createInvoice(select_rooms, car_id){
+                
+                var param = {
+                    trip_id : {{trip_id}},
+                    adult_count : {{adult_count}},
+                    children_count : {{children_count}},
+                    children_age : '{{children_age}}',
+                    select_rooms : select_rooms,
+                    car_id :  car_id,
+                };
+                
+                sendAjaxRequest('{{path('create_invoice')}}', param, function(data, status, xhr){
+                    if(status === 'success'){
+                        console.log('status: ' + status);
+                        console.log(data);
+
+                        $('#user_id').val(data.user_id);
+                        $('#total_amount').val(data.invoiceResult.amount);
+                        $('#invoice_number').val(data.invoiceResult.invoiceNumber);
+                        $('#qr_string').val(data.invoiceResult.qr_string);
+                        $('#qr_link').val(data.invoiceResult.qr_link);
+                        if(data.car_info !== null){
+                            $('#car_adult_price').val(data.car_info.adult_price);
+                            $('#car_child_price').val(data.car_info.child_price);
+                            $('#car_way').val(data.car_info.way);
+                            $('#car_direction').val(data.car_info.car_direction);
+                            $('#car_total_amount').val(data.car_total_amount);
+                        }
+
+                        $('#form_confirm').submit();
+                    }else{
+                        console.log('status: ' + status + ', data: ');
+                        console.log(data);
+                        UIkit.modal.alert('Failed to create invoice. Status:'+status+', Data:'+data);
+                    }
+                }, function(jqXhr, textStatus, errorMessage){
+                    console.log('Error' + errorMessage);
+                    UIkit.modal.alert('Failed to create invoice. Error message:'+errorMessage);
+                });
+            }
+    </script>
+{% endblock %}

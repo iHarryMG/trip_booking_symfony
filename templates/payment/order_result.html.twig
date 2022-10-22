@@ -1,0 +1,119 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block title %}Төлбөр амжилттай!{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/css/hotel_detail.css">
+    <style>
+        .wrapper, .uk-modal-header{
+            height: 120%;
+        }
+        #modal-content{
+            margin: auto;
+        }
+        .uk-modal-header h3, .uk-modal-header p{
+            text-align: center;
+            margin-top: 0px;
+            font-family: Roboto Condensed;
+        }
+        .uk-modal-header p{
+            font-size: 16px;
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+        }
+        .wrapper, .uk-modal-header {
+            height: -webkit-fill-available;
+        }
+        .uk-button-primary{
+            color: #fff!important;
+        }
+        
+    </style>
+{% endblock %}
+
+{% block navbar %}  
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="header-brand-logo">
+                <a href="#">
+                    <img class="logo" src="/leisure/images/logo_white.png">
+                </a>
+            </div>
+        </nav>
+    </header>
+{% endblock %} 
+
+{% block body %}
+<div class="wrapper">
+    <div class="uk-modal-header">
+        {% if payment_status == null %}
+            <img src="../../leisure/images/fail.png" class="center"/>
+            <h3 style="text-align: center;">
+                {{ description }} Код:{{payment_status}}
+            </h3>
+            <p style="text-align: center; margin-top: 10px;">
+                <span id="pay_amount">Please try again or you can directly contact us.</span><br/>
+            </p>
+        {% elseif payment_status == 1 %} {#Амжилттай#}
+            <img src="../../leisure/images/confirm.png" class="center"/>
+            <h3 style="text-align: center;">
+                {{ description }}
+            </h3>
+            <p style="text-align: center; margin-top: 10px;">
+                <span id="pay_amount">We will confirm your order within <span style="font-size: 18px; font-weight: bold;">30 min</span> and inform you by email whether the trip is confirmed or not.</span><br/>
+            </p>
+        {% elseif payment_status < 0 %} {#Нэхэмжлэх үүсээгүй#}
+            <img src="../../leisure/images/attention.png" class="center"/>
+            <h3 style="text-align: center;">
+                {{ description }} Code:{{payment_status}}
+            </h3>
+            <p style="text-align: center; margin-top: 10px;">
+                <span id="pay_amount">Please try again.</span><br/>
+            </p>
+        {% elseif payment_status == 0 %}  {#Pending#}
+            <img src="../../leisure/images/attention.png" class="center"/>
+            <h3 style="text-align: center;">
+                {{ description }} Code:{{payment_status}}
+            </h3>
+        {% elseif payment_status > 1 and payment_status < 5%} {#Cancelled#}{#Expired#}{#Fail#}
+            <img src="../../leisure/images/fail.png" class="center"/>
+            <h3 style="text-align: center;">
+                {{ description }} Code:{{payment_status}}
+            </h3>
+            <p style="text-align: center; margin-top: 10px;">
+                <span id="pay_amount">Please try again.</span><br/>
+            </p>
+        {% elseif payment_status == 999 %}
+            <img src="../../leisure/images/attention.png" class="center"/>
+            <h3 style="text-align: center;">
+                {{ description }} Code:{{payment_status}}
+            </h3>
+            <p style="text-align: center; margin-top: 10px;">
+                <span id="pay_amount">Please try again.</span><br/>
+            </p>
+        {% else %}
+            <img src="../../leisure/images/fail.png" class="center"/>
+            <h3 style="text-align: center;">
+                {{ description }} Code:{{payment_status}}
+            </h3>
+            <p style="text-align: center; margin-top: 10px;">
+                <span id="pay_amount">Please try again or you can directly contact us.</span><br/>
+            </p>
+        {% endif %}
+        
+        <p style="text-align: center; margin-top: 10px;">
+            <span id="pay_amount" style="">Please contact the following number for the booking  information.</span><br/>
+            <span id="pay_amount" style="font-weight: bold; font-size: 24px;">(+976) 8858-0022</span><br/>
+        </p>
+        <a href="{{ path('home') }}" class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom">Go back to Home</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}  
+{% endblock %}

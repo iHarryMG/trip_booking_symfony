@@ -1,0 +1,149 @@
+.mb-3{
+    margin-bottom: 0px!important;
+}
+.header-brand-logo p{
+    font-family: Roboto Condensed;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: normal;
+    color: #fff;
+    margin: 12px 0 0 0;
+}
+.top-search a.search-toggle {
+    float: left;
+    display: block;
+    font-size: 18px;
+    color: #ffffff;
+    width: 50px;
+    height: 25px;
+    margin-left: -10px;
+    padding-left: 10px;
+}
+.rating .voted {
+    color: #FFD600;
+}
+.jumbotron-title{
+	float: left;
+	margin-right: 10px;
+}
+.jumbotron {
+	box-shadow: 0px 0.5px 2px rgba(0, 0, 0, 0.025);
+	font-family: Roboto Condensed;
+	margin-bottom: 0.2rem;
+}
+.rooms{
+	padding: 0;
+}
+.jumbotron  ul.info-list li{
+	margin: 10px 0 0 0;
+	padding: 15px 0 0 0;
+	list-style-type: none;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+        min-height: 45px;
+}
+.jumbotron  ul{
+	padding: 0 5px 0px 5px;
+	margin: 0;
+}
+.jumbotron{
+    padding-bottom: 15px;
+    margin-top: 5px;
+}
+.info-title{
+	font-weight: bold;
+	font-size: 15px;
+	line-height: 18px;
+	color: #000;
+}
+.info-list i{
+	margin-top: 10px;
+	float: left;
+	color: #9C9C9C;
+}
+.info-list-item{
+	margin-left: 40px;
+}
+.info-list-item p{
+	margin: 0;
+	font-size: 12px;
+	line-height: 18px;
+}
+.info-list-item-title{
+	font-size: 16px!important;
+	font-weight: bold;
+}
+
+.room-list i{
+	margin: 5px 5px 0 0;
+	color: #9C9C9C;
+}
+
+.room-list li{
+	margin: 0;
+	list-style-type: none;
+}
+.checkbox{
+	padding-left: 50px;
+        padding-right: 50px;
+	padding-top: 28px;
+	width: 100%;
+	float: left;
+}
+.checkbox label{
+	    width: 90%;
+}
+.room-list-item{
+	margin-left: 5px;
+	position: absolute;
+    top: -10px;
+    width: 200px;
+}
+.room-list-item2{
+	position: absolute;
+    top: -10px;
+	right: 10px;
+    width: 200px;
+}
+.room-list-item p{
+	margin: 0;
+	font-size: 12px;
+	line-height: 18px;
+}
+.room-list-item-title{
+	font-size: 16px!important;
+	font-weight: bold;
+}
+.rooms table{
+	margin-top: -15px;
+/*	margin-left: 5px;*/
+	
+}
+.room-list a.room-btn{
+	display: inline-block;
+	border-left: 1px solid rgba(0, 0, 0, 0.1);
+	height: 70px;
+	width: 10%;
+	margin-top: 0px;
+}
+.room-list p.room-btn{
+        display: inline-block;
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+        height: 70px;
+        margin-bottom: 0px;
+}
+.room-btn i{
+	margin: 28px 0 0 15px;
+}
+#fixed-bottom{
+        position: relative;
+	bottom: 0px;
+        left: 0px;
+        margin-bottom: 70px!important;
+	width: 100%;
+	background: #fbfbfb;
+	z-index: 0;
+}
+.uk-button{
+	margin-bottom: 0px!important;
+}

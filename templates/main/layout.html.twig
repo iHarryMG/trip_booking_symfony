@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    <style>
+    .footer{
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff;
+    }
+    .footer ul{
+        margin: 0;
+        height: 55px;
+    }
+    .footer ul li{
+        padding-left: 0;
+    }
+    .uk-tab::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0px;
+        right: 0;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .footer a{
+        text-transform: none;
+    }
+    
+    .search_item1 .fa-search, .search_item1 .fa-calendar{
+        margin-top: 10px;
+        color: #007bff;
+    }
+    .top-search a{
+        padding: 0;
+        width: 30px;
+    }
+    .search_item1 button{
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{#{% block navbar %}    
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="header-brand-logo">
+                <a href="#">
+                    <img class="logo" src="/leisure/images/logo_white.png">
+                </a>
+            </div>
+            <div class="top-search">
+                {% if ('/home' in app.request.pathinfo) == 1 %}
+                <a href="#modal-sections" class="search-toggle uk-button" uk-toggle><i class="fa fa-search"></i></a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+{% endblock %}#}
+
+{% block footer %}    
+    
+    <footer class="footer">
+        <ul class="uk-tab-bottom uk-child-width-expand uk-tab" uk-tab="">
+             
+            {% if ('/home' in app.request.pathinfo) == 1 %}
+                <li class="uk-active"><a id="home" href="#"><span uk-icon="home"></span><br/>Home</a></li>
+            {% elseif ('/hotel' in app.request.pathinfo) == 1 %}
+                <li><a id="home" href="#"><span uk-icon="home"></span><br/>Home</a></li>
+            {% else %}
+                <li><a id="home" href="#"><span uk-icon="home"></span><br/>Home</a></li>
+            {% endif %}
+            <li 
+                {% if ('/order' in app.request.pathinfo) == 1 %}
+                class="uk-active"
+                {% endif %}
+                ><a id="order" href="#" ><span uk-icon="list"></span><br/>My Trips</a></li>
+            <li 
+                {% if ('/advise' in app.request.pathinfo) == 1 %}
+                class="uk-active"
+                {% endif %}
+                ><a id="advise" href="#" aria-expanded="false"><span uk-icon="question"></span><br/>Advice</a></li>
+            <li 
+                {% if ('/address' in app.request.pathinfo) == 1 %}
+                class="uk-active"
+                {% endif %}
+                ><a id="address" href="#" aria-expanded="false"><span uk-icon="location"></span><br/>Contact</a></li>
+        </ul>
+    </footer>
+    
+   {# <footer id="footer">
+        <div class="footer-slogan">
+            <p>Итгэмээргүй хямдаар Мөрөөдлийн аялалдаа...</p>
+        </div>
+        <div class="footer-content">
+            <div class="widget">
+                <h4 class="widget-title">Холбогдох утас</h4>
+                <ul class="list-large">
+                    <li><i class="fa fa-phone"></i>+976 8002-5000, +976 8003-5000</li>
+                </ul>
+                <h4 class="widget-title">Хаяг байршил</h4>
+                <ul class="list-large">
+                    <li><i class="fa fa-map-marker"></i>БЗД 26 хороо, Дүнжингарав худалдааны төвийн уулзвар, ИХ МОНГОЛ КОМПЛЕКС 1-р давхар, Leisure Trip Team.</li>
+                </ul>
+            </div>
+            <div class="copyright-content clearfix">
+                <div class="widget">
+                    <p class="copyright hidden-xs hidden-sm">© Хуулбарлахыг хориглоно Leisure Trip 2018-2019</p>
+                    <div class="social-icons">
+                        <ul>
+                            <li><a href="https://www.facebook.com/Leisure-Trip-2139820146100714" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                        </ul>
+                    </div>
+                </div>					
+            </div>
+        </div>
+    </footer>#}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        
+        jQuery(document).ready(function ($) {
+        
+            $("#home").click(function(){
+                location.href = '{{ path('home') }}';
+            });
+            $("#order").click(function(){
+                location.href = '{{ path('order_list') }}';
+            });
+            $("#advise").click(function(){
+                location.href = '{{ path('advise') }}';
+            });
+            $("#address").click(function(){
+                location.href = '{{ path('address') }}';
+            });
+        });
+    </script>
+{% endblock %}
+

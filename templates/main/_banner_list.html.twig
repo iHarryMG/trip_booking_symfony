@@ -1,0 +1,16 @@
+<ul class="uk-slider-items uk-grid banner-slider">
+{% if result is not null %}
+    
+        {% for item in result %}
+            <li class="uk-width-4-5">
+                <div class="uk-panel">
+                    <a href="{{ path('get_hotel_detail', {hotel_id: item.hotel_id, trip_id: item.trip_id, is_special: item.is_special } ) }}">
+                        <img src="{{ asset('leisure/images/hotel/') ~ item.hotel_img }}" style="width: 314px; height: 196px; left: 9px;" alt="">
+                        <p class="banner-title"></p>
+                    </a>
+                </div>
+            </li>
+        {% endfor %}
+    
+{% endif %}
+</ul>

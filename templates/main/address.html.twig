@@ -1,0 +1,98 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/css/hotel_detail.css">
+    <style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 40%;
+        }
+        .info-item{
+            float: left;
+            padding-top: 10px;
+        }
+        .info-title{
+            font-size: 16px;
+            color: #999;
+        }
+        .info-list-item p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 18px;
+        }
+        .info-title {
+            font-weight: lighter;
+        }
+        h3.slogan{
+            margin: 10px 0 15px 0;
+            font-family: Roboto Condensed;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 18px;
+            line-height: 27px;
+            text-align: center;
+            text-transform: uppercase;
+            color: #0075FF;
+            padding: 0 40px;
+        }
+        .jumbotron {
+            padding-bottom: 70px;
+            margin-top: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block navbar %}  
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="header-brand-logo">
+                <a href="#">
+                    <img class="logo" src="/leisure/images/logo_white.png">
+                </a>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+
+{% block body %}
+
+<div class="jumbotron col-12 col-md-12">
+    <img src="../../leisure/images/logo_blue.jpg" class="center"/>
+    <h3 class="slogan">DREAM TRAVEL AT CHEAPEST COST...</h3>
+    <div class="info-address">
+        <ul class="info-list">
+            <li>
+                <span class="info-item" uk-icon="location"></span>
+                <div class="info-list-item">
+                    <p style="font-size: 14px">Ulaanbaatar, Mongolia.</p>
+                </div>
+            </li>
+            <li>
+                <span class="info-item" uk-icon="receiver"></span>
+                <div class="info-list-item">
+                    <span class="info-title">Telephone</span>
+                    <p>+976 8858-0022</p>
+                </div>
+            </li>
+            <li>
+                <span class="info-item" uk-icon="mail"></span>
+                <div class="info-list-item">
+                    <span class="info-title">Email</span>
+                    <p>iharrymg@gmail.com</p>
+                </div>
+            </li>
+            <li>
+                <span class="info-item" uk-icon="facebook"></span>
+                <div class="info-list-item">
+                    <span class="info-title">Social</span>
+                    <p><a style="color: #0075FF;" href="https://www.facebook.com/iharrymg" target="_blank">www.facebook.com/iharrymg</a></p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

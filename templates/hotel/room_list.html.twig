@@ -1,0 +1,476 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    <link rel="stylesheet" href="/css/hotel_detail.css">
+    <style>
+        
+        .jumbotron ul.info-list li {
+            min-height: 45px;
+        }
+        #select-person i{
+            color: #0075ff;
+            margin-right: 10px;
+        }
+        #modal-sections ul li{
+            list-style: none;
+        }
+        #modal-sections ul{
+            padding-left: 0;
+        }
+        .info-room{
+            height: 70px;
+        }
+        .info-list-item table th{
+            color: #0075ff;
+        }
+        .room_discount{
+            text-decoration: line-through; padding-right: 10px; color:#9c9c9c;
+        }
+        .checkbox {
+            padding-left: 15px;
+            padding-right: 10px;
+            padding-top: 15px;
+            width: 70%;
+            float: left;
+        }
+        .rooms table {
+            margin-top: 0;
+            /* margin-left: 5px; */
+        }
+        #room_qty{
+            padding-top: 15px;
+        }
+        #modal-content{
+            margin: auto;
+        }
+        .uk-modal-header h3, .uk-modal-header p{
+            text-align: center;
+            margin-top: 0px;
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+        }
+        #pay_amount{
+            font-size: xx-large; font-weight: 800;
+        }
+        .price-content th{
+            font-weight: normal;
+        }
+        .price-total{
+            font-size: 18px;
+        }
+        .order_trip{
+            margin-top: 15px;
+        }
+        .inactive{
+            color: #fff!important;
+            background-color: #d4d4d4!important; 
+        }
+    </style>
+{% endblock %}
+
+{% block navbar %}  
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="top-search">
+                <a href="{{ path('get_hotel_detail', {hotel_id: hotel_id, trip_id: trip_id, is_special: is_special} ) }}" class="search-toggle"><i class="fa fa-arrow-left fa-lg"></i></a>
+            </div>
+            <div class="header-brand-logo">
+                <p>Rooms</p>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+    
+{% block body %}
+                    
+    {% if rooms is not null %}
+        <div id="room_list">
+        {% for item in rooms %}
+
+            <div class="jumbotron col-12 col-md-12 rooms" style="margin-top: 5px; margin-bottom: 5px; height: 75px;">
+                <div id="select-person" class="checkbox checkbox-primary">
+                    <table style="width:100%;" room-num="1" ad-cnt="2" cd-cnt="0">
+                        <tr>
+                            <th rowspan="2" style="width:12%;"><i class="fa fa-bed fa-lg"></i></th>
+                            <th style="width:40%;">{{item.room_name}}</th>
+                            <th style="width:44%; text-align: right;">
+                                {% if item.is_special == 1 %}
+                                    {{ item.price_discounted_bb | number_format }} MNT
+                                {% else %}
+                                    {{ item.price_bb | number_format }} MNT
+                                {% endif %}
+                            </th>
+                        </tr>
+                        <tr class="table-value">
+                            <td style="text-align: left; font-size: 14px;">2 persons (TWN)</td>
+                            <td style="text-align: left; font-size: 14px; text-align: right;">
+                                {{item.night_count}} nights
+                                {% if item.night_count_plus is not null %}
+                                    ( +{{ item.night_count_plus }} )
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="btn-group hotel-create-dropdown" id="room_qty">
+                    <button room-id="{{item.room_id}}" room-qty="0" room-name="{{item.room_name}}" 
+                            {% if item.is_special == 1 %}
+                                room-price="{{ item.price_discounted }}" 
+                                room-price-bb="{{ item.price_discounted_bb }}"
+                            {% else %}
+                                room-price="{{ item.price_a }}"
+                                room-price-bb="{{ item.price_bb }}"
+                            {% endif %}
+                            type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Select
+                    </button>
+                    <div class="dropdown-menu">
+                        {% for i in 0..min_room %}
+                            <a class="dropdown-item" href="#" room-qty="{{i}}">{{i}}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+        <div id="price_info" class="jumbotron col-12 col-md-12" style="display:none;">
+            <div>
+                <p class="info-title">Price:</p>
+                <ul class="info-list">
+                    <li>
+                        <div class="price-content">
+                            <table style="width:100%;">
+                                <tr>
+                                    <th><i class="fa fa-user" style="margin:0;"></i></th>
+                                    <th>Adults: {{adult_count}}</th>
+                                    <th style="text-align: right;" class="adult_amount">
+                                        0 MNT
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th><i class="fa fa-user" style="margin:0;"></i></th>
+                                    <th>Children: {{children_count}} 
+                                        {% if children_count != 0%}
+                                            (Age {{children_age}} years old)
+                                        {% endif %}
+                                    </th>
+                                    <th style="text-align: right;" class="children_amount">
+                                        0 MNT
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="price-total">
+                            <table style="width:100%;">
+                                <tr>
+                                    <th>Total Price:</th>
+                                    <th style="text-align: right;" class="total_amount">
+                                        0 MNT
+                                    </th>
+                                </tr>
+                            </table>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="order_trip">
+                <button id="order_trip_btn" class="uk-button uk-width-1-1 uk-margin-small-bottom">BOOK</button>	
+            </div>
+        </div>
+    {% endif %}
+    
+    {% if car_info is not null %}
+    <div id="modal-sections" uk-modal>
+        <div class="uk-modal-dialog">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <div class="uk-modal-header" style="{#height: 45px;#}">
+                <h3 class="uk-modal-title">Rent car booking</h3>
+            </div>
+            <div class="uk-modal-body">
+                <p style="margin:0;">
+                    Would you like to rent a car to travel to {{car_info[0].car_direction}}? 
+                </p>
+                <div class="uk-overflow-auto">
+                    <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+                        <thead>
+                            <tr>
+                                <th class="uk-table-shrink"></th>
+                                <th class="uk-table-shrink uk-text-nowrap">Direction</th>
+                                <th class="uk-table-shrink uk-text-nowrap">Adults</th>
+                                <th class="uk-table-expand uk-text-nowrap">Children*</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in car_info %}
+                                <tr>
+                                    <td><input style="width:20px; height:20px;" class="uk-radio"  type="radio" name="car_id" value="{{item.car_price_id}}"></td>
+                                    <td class="uk-text-nowrap">{{item.way}} way</td>
+                                    <td class="uk-text-nowrap">{{item.adult_price|number_format}} MNT</td>
+                                    <td class="uk-text-nowrap">{{item.child_price|number_format}} MNT</td>
+                                </tr>
+                            {% endfor %}
+                                <tr>
+                                    <td colspan="4">*Children (2-7 years old)</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">The car booking fee will be added to your travel fee.</td>
+                                </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button id='car_order_no' class="uk-button uk-modal-close" type="button">No, thanks</button>
+                <button id='car_order_yes' class="uk-button uk-button-primary" type="button">Yes, sure</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+            
+    <form id="form_upload_img" action="{{ path('photo') }}">
+        <input type="hidden" name="params" id="params" value="" />
+        <input type="hidden" name="adult_count" id="adult_count" value="{{adult_count}}" />
+        <input type="hidden" name="children_count" id="children_count" value="{{children_count}}" />
+        <input type="hidden" name="children_age" id="children_age" value="'{{children_age}}'" />
+        <input type="hidden" name="trip_id" id="trip_id" value="{{trip_id}}" />
+        <input type="hidden" name="hotel_id" id="hotel_id" value="{{hotel_id}}" />
+        <input type="hidden" name="is_special" id="is_special" value="{{is_special}}" />
+    </form>
+
+    <div id="modal-information" uk-modal>
+        <div class="uk-modal-dialog">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <div class="uk-modal-header" style="height: 45px;">
+            </div>
+            <div class="uk-modal-body">
+                Sorry, it is not possible to order at this time. You can book a tour from Monday to Friday from 10:00am to 08:00pm and on Saturday from 11:00am to 06:00pm.
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">Understood</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script type="text/javascript">
+
+        jQuery(document).ready(function () {
+            
+            if(isValidTime()){
+                $("#order_trip_btn").addClass('uk-button-primary');
+                $("#order_trip_btn").removeClass('inactive');
+            }else{
+                $("#order_trip_btn").addClass('inactive');
+                $("#order_trip_btn").removeClass('uk-button-primary');
+            }
+            
+            $("#room_qty .dropdown-menu a.dropdown-item").on( "click", function() {
+                $(this).parent().siblings("button").text($(this).text()+" room");
+                $(this).parent().siblings("button").attr('room-qty', $(this).attr('room-qty'));
+                
+                if(($(this).text() != undefined || $(this).text() != '') && $(this).text() > 0){
+                    $("#order_trip_btn").css({
+                        'background-color' : '#0075ff',
+                        'color' : '#fff',
+                    });
+                    getTotalAmount();
+                    
+                    $("#price_info").show();
+                }else{
+                    if(getSelectedRooms()['selected_room_qty'] < 1){
+                        $('.adult_amount').text('0 MNT');
+                        $('.children_amount').text('0 MNT');
+                        $('.total_amount').text('0 MNT');
+                    }
+                }
+            });
+            
+
+            $('#order_trip_btn').click(function(event){
+                event.preventDefault();
+                
+                if(!isValidTime()){
+                    UIkit.modal("#modal-information").show();
+                    return false;
+                }
+                
+                var min_room = {{min_room}};
+                var selected_room_qty = getSelectedRooms()['selected_room_qty'];
+                var select_rooms = getSelectedRooms()['select_rooms'];
+                
+                if(selected_room_qty < 1){
+                    UIkit.modal.alert('Please select room!');
+                }else if(min_room > selected_room_qty){
+                    UIkit.modal.alert('Please select '+(min_room - selected_room_qty)+' more rooms.');
+                }else if(min_room < selected_room_qty){
+                    UIkit.modal.alert('The number of rooms you can select from: '+min_room);
+                }else{
+                    console.log('selected_room_qty: ' + selected_room_qty);
+                    console.log(select_rooms);
+                    
+                    // машин захиалга байвал 
+                    {% if car_info is not null %}
+                        UIkit.modal("#modal-sections").show();
+                        
+                        $("#car_order_yes").click(function(){
+                            if($("input[name='car_id']:checked"). val() === undefined || $("input[name='car_id']:checked"). val() === null){
+                                UIkit.modal.alert('Please select direction!').then(function () {
+                                    UIkit.modal("#modal-sections").show();
+                                });
+                            }else{
+                                submitForm(select_rooms, $("input[name='car_id']:checked"). val());
+                            }
+                        });    
+                        
+                        $("#car_order_no").click(function(){
+                            submitForm(select_rooms, null);
+                        });
+                    {% else %}
+                        submitForm(select_rooms, null);
+                    {% endif %}
+                    
+                }
+                
+            }); 
+            
+            
+        });
+        
+        function getSelectedRooms(){
+            var selected_room_qty = 0;
+            var select_rooms = [];
+            var buttons = $("#room_list").find("button");           
+            
+            for(var i=0; i<buttons.length; i++ ){
+                selected_room_qty = selected_room_qty + Number($(buttons[i]).attr('room-qty'));
+                if(Number($(buttons[i]).attr('room-qty')) != 0){
+                    select_rooms.push({
+                        room_id: $(buttons[i]).attr('room-id'),
+                        room_qty: $(buttons[i]).attr('room-qty'),
+                        room_name: $(buttons[i]).attr('room-name'),
+                        room_price_a: $(buttons[i]).attr('room-price'),
+                        room_price_bb: $(buttons[i]).attr('room-price-bb'),
+                    });
+                }
+            }
+            
+            return {
+                selected_room_qty : selected_room_qty,
+                select_rooms : select_rooms
+            };
+        }
+        
+        function submitForm(select_rooms, car_id){
+
+            var param = {
+                    trip_id : {{trip_id}} ,
+                    adult_count : {{adult_count}} ,
+                    children_count : {{children_count}} ,
+                    children_age : '{{children_age}}' ,
+                    hotel_id :  {{hotel_id}} ,
+                    is_special :  {{is_special}} ,
+                    select_rooms : select_rooms ,
+                    car_id :  car_id ,
+                };
+        
+            $('#params').val(JSON.stringify(param));
+            $('#adult_count').val({{adult_count}});
+            $('#children_count').val({{children_count}});
+            $('#children_age').val('{{children_age}}');
+            $('#form_upload_img').submit();
+        }
+        
+        function getTotalAmount(){
+            var select_rooms = getSelectedRooms()['select_rooms'];
+            var param = {
+                        adult_count : {{adult_count}},
+                        children_count : {{children_count}},
+                        children_age : '{{children_age}}',
+                        select_rooms : select_rooms,
+                    };
+                    
+            sendAjaxRequest('{{path('get_total_amount')}}', param, function(data, status, xhr){
+                if(status === 'success'){
+                    console.log('status: ' + status);
+                    console.log(data);
+                    
+                    $('.adult_amount').text(formatNumber(data['adult_amount'])+' MNT');
+                    $('.children_amount').text(formatNumber(data['children_amount'])+' MNT');
+                    $('.total_amount').text(formatNumber(data['total_amount'])+' MNT');
+                    
+                }else{
+                    console.log('status: ' + status + ', data: ');
+                    console.log(data);
+                    UIkit.modal.alert('Internal error during price calculation. Status:'+status+', Data:'+data);
+                }
+            }, function(jqXhr, textStatus, errorMessage){
+                console.log('Error' + errorMessage);
+                UIkit.modal.alert('Internal error during price calculation. Error message:'+errorMessage);
+            });
+        }
+        
+        function isValidTime(){
+            var d = new Date();
+            var hours = parseInt(d.getHours());
+            var mins = parseInt(d.getMinutes());
+            var day = d.getDay();
+            var weekday = new Array(7);
+            weekday[0] = "Sunday";
+            weekday[1] = "Monday";
+            weekday[2] = "Tuesday";
+            weekday[3] = "Wednesday";
+            weekday[4] = "Thursday";
+            weekday[5] = "Friday";
+            weekday[6] = "Saturday";
+
+            var dayName = weekday[day];
+
+            console.log("Today is "+dayName);
+            console.log("It's "+hours+":"+mins+" o'clock");
+            
+            var pass = {{is_skip_user}};
+            if(pass > 0){
+                return true;
+            }
+            
+            if(dayName !== 'Saturday' && dayName !== 'Sunday'){
+                if((hours >= 10 && mins >=0) && (hours <= 19 && mins <=59)){
+                    console.log("Valid weekday and valid hour");
+                    return true;
+                }else{
+                    console.log("Valid weekday but invalid hour");
+                    return false;
+                }
+            }else if(dayName === 'Saturday'){
+                if((hours >= 11 && mins >=0) && (hours <= 17 && mins <=59)){
+                    console.log("Valid weekday and valid hour");
+                    return true;
+                }else{
+                    console.log("Valid weekday but invalid hour");
+                    return false;
+                }
+            }else{
+                console.log("Invalid weekday");
+                return false;
+            }
+            
+        }
+        
+        function formatNumber(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
+
+    </script>
+    
+{% endblock %}

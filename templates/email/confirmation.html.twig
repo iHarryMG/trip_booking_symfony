@@ -1,0 +1,95 @@
+<style>
+    .table{
+        border-collapse: collapse;
+        border: 1px solid #c3c3c3;
+    }
+    td{
+        font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+        border: 1px solid #c3c3c3;
+    }
+    .table_title{
+        font-weight: bold;
+    }
+</style>
+<img style="width: 80px;" src="{{ absolute_url(asset('/leisure/images/logo.jpg')) }}">
+<h2>Шинэ захиалга хийгдлээ</h2>
+<h4>Огноо: {{ updated_at }}</h4>
+<table class="table table-bordered" id="dataTable" width="600px" cellspacing="0">
+    <thead>
+        <tr>
+            <th colspan="2" style="background-color: #4d90fee3; color: #fff;">Захиалгын мэдээлэл</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td width="20%" class="table_title">Захиалагчийн нэр</td>
+            <td width="80%">{{ last_name }} овогтой {{ first_name }}</td>
+        </tr>
+        <tr>
+            <td width="20%" class="table_title">Улс, Хот</td>
+            <td width="80%">{{ country_name }} улсын {{ city_name }}</td>
+        </tr>
+        <tr>
+            <td width="20%" class="table_title">Буудлын нэр</td>
+            <td width="80%">{{ hotel_name }}, Зэрэглэл:{{ hotel_star }}</td>
+        </tr>
+        <tr>
+            <td width="20%" class="table_title">Өрөөний төрөл</td>
+            <td width="80%">
+                {% if room_info is not null%}
+                    {% for item in room_info %}
+                        <span>{{ item.room_name }}</span><br/>
+                    {% endfor %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td width="20%" class="table_title">Хүний тоо</td>
+            <td width="80%">{{ adult_count }} том хүн, {{ children_count }} хүүхэд, Нас: {{ children_age}}</td>
+        </tr>
+        <tr>
+            <td width="20%" class="table_title">Аяллын огноо</td>
+            <td width="80%">{{ departure_datetime }} - {{ arrival_datetime }}</td>
+        </tr>
+        <tr>
+            <td width="20%" class="table_title">Маршрут</td>
+            <td width="80%">{{ direction }}</td>
+        </tr>
+        <tr>
+            <td width="20%" class="table_title">Төлбөр</td>
+            <td width="80%">{{ total_amount }}</td>
+        </tr>
+        <tr>
+            <td width="20%" class="table_title">Захиалгын төлөв</td>
+            <td width="80%">{{ order_status }}</td>
+        </tr>
+    </tbody>
+    {% if car_order is not null%}
+        <thead>
+            <tr>
+                <th colspan="2" style="background-color: #4d90fee3; color: #fff;">Нэмэлт үйлчилгээ /Машин захиалга/</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in car_order %}
+            <tr>
+                <td width="20%" class="table_title">Маршрут</td>
+                <td width="80%">{{ item.car_direction }} талдаа</td>
+            </tr>
+            <tr>
+                <td width="20%" class="table_title">Чиглэл</td>
+                <td width="80%">{{ item.way }} талдаа</td>
+            </tr>
+            <tr>
+                <td width="20%" class="table_title">Том хүний үнэ</td>
+                <td width="80%">{{ item.adult_price }}</td>
+            </tr>
+            <tr>
+                <td width="20%" class="table_title">Хүүхдийн үнэ</td>
+                <td width="80%">{{ item.child_price }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    {% endif%}
+</table>
+

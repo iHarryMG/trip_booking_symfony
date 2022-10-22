@@ -1,0 +1,170 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    <link rel="stylesheet" href="/css/hotel_detail.css">
+    <style>
+        .info-room{
+            height: 70px;
+        }
+        .room_discount{
+            text-decoration: line-through; padding-right: 10px; color:#9c9c9c;
+        }
+        .hotel-info i {
+            float: none;
+            font-size: 14px; 
+        }
+        .info-list-item p {
+            margin: 5px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block navbar %}  
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="top-search">
+                    <a href="{{ path('order_list') }}" class="search-toggle"><i class="fa fa-arrow-left fa-lg"></i></a>
+            </div>
+            <div class="header-brand-logo">
+                <p>Booking details</p>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+    
+{% block body %}
+    
+    {% if orderDetail is not null %}    
+        <div class="jumbotron col-12 col-md-12">
+            <div class="info-service">
+                <p class="info-title">Travel package info:</p>
+                {% for item in orderDetail %}
+                <ul class="info-list">
+                    <li>
+                        <i class="fa fa-plane fa-lg"></i>
+                        <div class="info-list-item">
+                            <p class="info-list-item-title">{{item.country_name}} country, {{item.city_name}}</p>
+                            <p>{{item.direction}} {{item.departure_datetime|date('Y-m-d')}} - {{item.arrival_datetime|date('Y-m-d')}}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-building-o fa-lg" style="margin-top: 15px;"></i>
+                        <div class="info-list-item hotel-info">
+                            <p class="info-list-item-title">{{item.hotel_name}} hotel
+                                {% if item.hotel_name|length > 20%}
+                                <br/>
+                                {% endif %}
+                                <span class="rating">
+                                    {% for i in 1..orderDetail[0].hotel_star %}
+                                        <i class="fa fa-star voted"></i>
+                                    {% endfor %}
+                                </span>
+                            </p>
+                            <p>{{item.adult_count}} adults
+                                {% if item.children_count is not null and item.children_count != '' and item.children_count > 0%}
+                                , {{item.children_count}} children
+                                {% endif %}
+                            </p>
+                        </div>
+                    </li>
+                    <li class="last-item" style="border-bottom: 0;">
+                        <i class="fa fa-umbrella fa-lg"></i>
+                        <div class="info-list-item">
+                            <p class="info-list-item-title">Travel insurance</p>
+                            <p>{{item.insurance}}</p>
+                        </div>
+                    </li>
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+    
+        {% if rooms is not null %}
+            <div class="jumbotron col-12 col-md-12">
+                <div class="info-service">
+                    <p class="info-title">Room info:</p>
+                    <ul class="info-list">
+                        {% for item in rooms %}
+                            <li>
+                                <i class="fa fa-bed fa-lg"></i>
+                                <div class="info-list-item">
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <th style="color: #000!important;">{{ item.room_name }}</th>
+                                        </tr>
+                                        <tr class="table-value">
+                                            <td style="font-size: 14px;"><span>{{ item.room_qty }} room</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+        
+        {% if car_info is not null %}
+            <div class="jumbotron col-12 col-md-12">
+                <div class="info-service">
+                    <p class="info-title">My booking info:</p>
+                    <ul class="info-list">
+                        {% for item in car_info %}
+                            <li>
+                                <i class="fa fa-car fa-lg"></i>
+                                <div class="info-list-item">
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <th style="color: #000!important;">{{ item.car_direction }} direction</th>
+                                        </tr>
+                                        <tr class="table-value">
+                                            <td style="font-size: 14px;"><span>{{ item.way }} way</span></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    
+        {% if orderDetail is not null %}    
+            <div class="payment-info jumbotron col-12 col-md-12">
+                <div class="info-service">
+                    <p class="info-title">Payment info:</p>
+                    <ul class="info-list">
+                        {% for item in orderDetail %}
+                            <li>
+                                <i class="fa fa-check fa-lg"></i>
+                                <div class="info-list-item">
+                                    <table style="width:100%;">
+                                        <tr>
+                                            <th>{{ item.total_amount|number_format }}₮</th>
+                                        </tr>
+                                        <tr class="table-value">
+                                            <td style="font-size: 14px; color: #00BB07">
+                                                {% if item.order_status == 'PAID' or item.order_status == 'invoice.paid'%}
+                                                    <span style="color: #00BB07;">Paid</span>
+                                                {% elseif item.order_status == 'PROCESSING' %}
+                                                    <span style="color: #dc3545;">Pending</span>
+                                                {% else%}
+                                                    <span style="color: #dc3545;">{{item.order_status}}</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+
+    {% endif %}
+
+{% endblock %}

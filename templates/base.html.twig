@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-141624420-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-141624420-1');
+        </script>
+
+        {% block meta %}
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <meta name="description" content="Leisure Trip">
+            <meta name="author" content="BMG">
+        {% endblock %}
+            <title>{% block title %}Leisure Trip{% endblock %}</title>
+        {% block stylesheets %}
+             {#<link rel="shortcut icon" href="{{ asset('/app/images/icons/favicon.png') }}" />#} 
+            <link rel="stylesheet" href="/library/bootstrap/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+            <link rel="stylesheet" href="/library/font-awesome/css/font-awesome.min.css">
+            <link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>
+            <link rel="stylesheet" href="/library/uikit/css/uikit.min.css">
+            <link rel="stylesheet" href="/library/bootstrap-checkbox/awesome-bootstrap-checkbox.css">
+            <link rel="stylesheet" href="/css/base.css">
+            <link rel="stylesheet" href="/css/home.css">
+        {% endblock %}
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body id="page-top">
+        <div id="site" class="site-wrapper" style="width: auto;">
+
+        {% block navbar %}{% endblock %}
+        
+        <main role="main" class="container">
+        {% block body %}{% endblock %}
+        </main>
+        
+        {% block footer %}{% endblock %}
+        
+        </div>
+        {% block javascripts %}
+            <script src="/js/jquery-1.11.3.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+            <script src="/library/bootstrap/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+            <script src="/library/uikit/js/uikit.min.js"></script>
+            <script src="/library/uikit/js/uikit-icons.min.js"></script>
+            <!-- Local JS -->
+            <script src="/js/common.js"></script>
+        {% endblock %}
+    </body>
+</html>

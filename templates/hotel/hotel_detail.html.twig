@@ -1,0 +1,525 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    
+    <link rel="stylesheet" href="/css/hotel_detail.css">
+    <style>
+        /*jssor slider loading skin spin css*/
+        .jssorl-009-spin img {
+            animation-name: jssorl-009-spin;
+            animation-duration: 1.6s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+        @keyframes jssorl-009-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /*jssor slider arrow skin 051 css*/
+        .jssora051 {display:block;position:absolute;cursor:pointer;}
+        .jssora051 .a {fill:none;stroke:#fff;stroke-width:360;stroke-miterlimit:10;}
+        .jssora051:hover {opacity:.8;}
+        .jssora051.jssora051dn {opacity:.5;}
+        .jssora051.jssora051ds {opacity:.3;pointer-events:none;}
+
+        /*jssor slider thumbnail skin 111 css*/
+        .jssort111 .p {position:absolute;top:0;left:0;width:200px;height:100px;background-color:#000;}
+        .jssort111 .p img {position:absolute;top:0;left:0;width:100%;height:100%;}
+        .jssort111 .t {position:absolute;top:0;left:0;width:100%;height:100%;border:none;opacity:.45;}
+        .jssort111 .p:hover .t{opacity:.8;}
+        .jssort111 .pav .t, .jssort111 .pdn .t, .jssort111 .p:hover.pdn .t{opacity:1;}
+        .jssort111 .ti {position:absolute;bottom:0px;left:0px;width:100%;height:28px;line-height:28px;text-align:center;font-size:12px;color:#fff;background-color:rgba(0,0,0,.3)}
+        .jssort111 .pav .ti, .jssort111 .pdn .ti, .jssort111 .p:hover.pdn .ti{color:#000;background-color:rgba(255,255,255,.6);}
+        .jumbotron ul.info-list li {
+            min-height: 45px;
+        }
+        #select-person i{
+            color: #0075ff;
+        }
+        #modal-sections ul li{
+            list-style: none;
+        }
+        #modal-sections ul{
+            padding-left: 0;
+        }
+        .info-room{
+            height: 70px;
+        }
+        .info-list-item table th{
+            color: #0075ff;
+        }
+        .room_discount{
+            text-decoration: line-through; padding-right: 10px; color:#9c9c9c;
+        }
+        .uk-modal-body {
+            padding: 10px;
+        }
+        .show_more{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+{% endblock %}
+
+
+{% block navbar %}  
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="top-search">
+                {% if service is not null %}
+                    {% if service[0].is_special == 1 %}
+                        <a href="{{ path('home') }}" class="search-toggle"><i class="fa fa-arrow-left fa-lg"></i></a>
+                    {% else %}
+                        <a href="{{ path('get_hotel', {city_id: service[0].city_id, country_id: service[0].country_id} ) }}" class="search-toggle"><i class="fa fa-arrow-left fa-lg"></i></a>
+                    {% endif %}    
+                {% else %}
+                    <a href="{{ path('home') }}" class="search-toggle"><i class="fa fa-arrow-left fa-lg"></i></a>
+                {% endif %}
+            </div>
+            <div class="header-brand-logo">
+                <p>
+                {% if service is not null %}
+                    {{ service[0].hotel_name[:28] }}
+                {% endif %}
+                </p>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+    
+{% block body %}
+    
+    {% if service is not null %}
+        <div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:980px;height:520px;overflow:hidden;visibility:hidden;">
+            <!-- Loading Screen -->
+            <div data-u="loading" class="jssorl-009-spin" style="position:absolute;top:0px;left:0px;width:100%;height:100%;text-align:center;background-color:rgba(0,0,0,0.7);">
+                <img style="margin-top:-19px;position:relative;top:50%;width:38px;height:38px;" src="/leisure/images/hotel/spin.svg" />
+            </div>
+            <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:980px;height:520px;overflow:hidden;">
+
+                {% for item in photo %}
+                    <div>
+                        <img data-u="image" src="{{ asset('leisure/images/hotel/') ~ item.hotel_img }}" />
+                        <div data-u="thumb">
+                            <img data-u="thumb" src="{{ asset('leisure/images/hotel/') ~ item.hotel_img }}" />
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+            <!-- Thumbnail Navigator -->
+            <div data-u="thumbnavigator" class="jssort111" style="position:absolute;left:0px;bottom:0px;width:980px;height:100px;cursor:default;" data-autocenter="1" data-scale-bottom="0.75">
+                <div data-u="slides">
+                    <div data-u="prototype" class="p">
+                        <div data-u="thumbnailtemplate" class="t"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Arrow Navigator -->
+            <div data-u="arrowleft" class="jssora051" style="width:55px;height:55px;top:162px;left:25px;" data-autocenter="2" data-scale="0.75" data-scale-left="0.75">
+                <svg viewbox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                <polyline class="a" points="11040,1920 4960,8000 11040,14080 "></polyline>
+                </svg>
+            </div>
+            <div data-u="arrowright" class="jssora051" style="width:55px;height:55px;top:162px;right:25px;" data-autocenter="2" data-scale="0.75" data-scale-right="0.75">
+                <svg viewbox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+                <polyline class="a" points="4960,1920 11040,8000 4960,14080 "></polyline>
+                </svg>
+            </div>
+        </div>
+                
+        <div class="jumbotron col-12 col-md-12">
+            {% if service[0].hotel_name|length > 20%}
+                <div class="jumbotron-title" style="float:none;">
+            {% else %}
+                <div class="jumbotron-title">
+            {% endif%}
+                <p style="margin:0;">{{ service[0].hotel_name }}</p>
+            </div>
+            <div class="rating">
+                {% for i in 1..service[0].hotel_star %}
+                    <i class="fa fa-star voted"></i>
+                {% endfor %}
+            </div>
+            
+        </div>
+                
+    
+        <div class="jumbotron col-12 col-md-12">
+            <div class="info-service">
+                <p class="info-title">Services included in the Trip Package :</p>
+                {% for item in service %}
+                <ul class="info-list">
+                    <li>
+                        <i class="fa fa-calendar fa-lg"></i>
+                        <div class="info-list-item">
+                            <p class="info-list-item-title">Trip to {{item.city_name}} {{item.country_name}}</p>
+                            <p>
+                                {{item.night_count}} 
+                                {% if item.night_count_plus is not null and item.night_count_plus != ''%}
+                                    (+{{item.night_count_plus}})
+                                {% endif %}
+                                nights 
+                                ( {{item.departure_datetime}} - {{item.arrival_datetime}} )
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-plane fa-lg"></i>
+                        <div class="info-list-item">
+                            <p class="info-list-item-title">Flight</p>
+                            <p>{{item.direction}}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-building-o fa-lg"></i>
+                        <div class="info-list-item">
+                            <p class="info-list-item-title">Hotel</p>
+                            <p>{{item.hotel_name}}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-cutlery fa-lg"></i>
+                        <div class="info-list-item">
+                            <p class="info-list-item-title">Meal</p>
+                            <p>{{item.meal}}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-umbrella fa-lg"></i>
+                        <div class="info-list-item">
+                            <p class="info-list-item-title">Travel Insurance</p>
+                            <p>{{item.insurance}}</p>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-smile-o fa-lg"></i>
+                        <div class="info-list-item">
+                            <p class="info-list-item-title">Airport Pick-up and Drop-off</p>
+                            <p>{{item.welcome_service}}</p>
+                        </div>
+                    </li>
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+        {#<button class="uk-button uk-button-default uk-button-small show_more">Бусад мэдээлэл үзэх</button>#}
+    
+    {% if rooms is not null %}
+        <div class="jumbotron col-12 col-md-12">
+            <div class="info-service">
+                <p class="info-title">Rooms and Guests:</p>
+                <ul class="info-list">
+                    {% for item in rooms %}
+                        <li>
+                            <i class="fa fa-bed fa-lg"></i>
+                            <div class="info-list-item">
+                                <table style="width:100%;">
+                                    <tr>
+                                        <th>{{ item.room_name }}</th>
+                                        <th style="text-align: right;">
+                                            {% if item.is_special == 1 %}
+                                                <span class="room_discount">{{ item.price_bb | number_format }} MNT </span>
+                                                {{ item.price_discounted_bb | number_format }} MNT
+                                            {% else %}
+                                                {{ item.price_bb | number_format }} MNT 
+                                            {% endif %}
+                                        </th>
+                                    </tr>
+                                    <tr class="table-value">
+                                        <td style="font-size: 14px;"><span>{#2 хүн #}(TWN BED)</span></td>
+                                        <td style="text-align: right;font-size: 14px;">
+                                            <span>(2 persons)</span>
+                                            <span style="padding-left:5px;">{{item.night_count}} nights
+                                                {% if item.night_count_plus is not null %}
+                                                    ( +{{ item.night_count_plus }} )
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="jumbotron col-12 col-md-12">
+            <div id="{#fixed-bottom#}">
+                <a id="choose_room" class="uk-button uk-button-primary uk-width-1-1 uk-margin-small-bottom" style="color: #fff;">BOOK</a>		
+            </div>
+        </div>
+    {% endif %}
+
+    <div id="modal-sections" uk-modal>
+        <div class="uk-modal-dialog">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <div class="uk-modal-header" style="height: 45px;">
+                {#<h4 class="uk-modal-title">Хүний тоо</h4>#}
+            </div>
+            <div class="uk-modal-body">
+                <ul id="person-count">
+                    <li>
+                        <div class="col-12" style="height:40px; margin-bottom: 10px;">
+                            <div class="col-6" style="float:left; height: 100%; padding-top: 5px;">Adult</div>
+
+                            <div id="dataTable_filter" class="dataTables_filter">
+                              <div class="btn-group hotel-create-dropdown" id="adult_qty">
+                                  <button adult-qty="2" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                      2 adults
+                                  </button>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" adult-qty="1">1</a>
+                                    <a class="dropdown-item" href="#" adult-qty="2">2</a>
+                                    <a class="dropdown-item" href="#" adult-qty="3">3</a>
+                                    <a class="dropdown-item" href="#" adult-qty="4">4</a>
+                                    <a class="dropdown-item" href="#" adult-qty="5">5</a>
+                                    <a class="dropdown-item" href="#" adult-qty="6">6</a>
+                                  </div>
+                              </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-12" style="height:40px;">
+                            <div class="col-6" style="float:left; height: 100%; padding-top: 5px;">Children</div>
+
+                            <div id="dataTable_filter" class="dataTables_filter">
+                              <div class="btn-group hotel-create-dropdown" id="child_qty">
+                                  <button child-qty="0" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                      0 children
+                                  </button>
+                                  <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" child-qty="0">0</a>
+                                    <a class="dropdown-item" href="#" child-qty="1">1</a>
+                                    <a class="dropdown-item" href="#" child-qty="2">2</a>
+                                    <a class="dropdown-item" href="#" child-qty="3">3</a>
+                                    <a class="dropdown-item" href="#" child-qty="4">4</a>
+                                    <a class="dropdown-item" href="#" child-qty="5">5</a>
+                                    <a class="dropdown-item" href="#" child-qty="6">6</a>
+                                  </div>
+                              </div>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+                <ul id="children_age_list">
+
+                </ul>
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button id='person_qty_cancel' class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+                <button id='person_qty_ok' class="uk-button uk-button-primary" type="button">ОК</button>
+            </div>
+        </div>
+    </div>
+   
+    <form id="select_room" action="{{ path('get_room_list') }}">
+        <input type='hidden' id='adult_count' name='adult_count' value=''/>
+        <input type='hidden' id='children_count' name='children_count' value=''/>
+        <input type='hidden' id='children_age' name='children_age' value=''/>
+        <input type='hidden' id='trip_id' name='trip_id' value='{{ service[0].trip_id }}'/>
+        <input type='hidden' id='hotel_id' name='hotel_id' value='{{ service[0].hotel_id }}'/>
+        <input type='hidden' id='is_special' name='is_special' value='{{ service[0].is_special }}'/>
+    </form>
+    
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script src="/js/jssor.slider-27.5.0.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        jQuery(document).ready(function ($) {
+                
+            $("#choose_room").click(function(){
+                UIkit.modal("#modal-sections").show();
+            });
+             
+            UIkit.util.on('#person_qty_ok', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+ 
+                var adult_qty = $("#adult_qty button").attr("adult-qty");
+                var child_qty = $("#child_qty button").attr("child-qty");
+                var children_age = [];
+                
+                if(adult_qty === undefined){
+                    UIkit.modal.alert('Please select person quantity!').then(function () {
+                        UIkit.modal("#modal-sections").show();
+                    });
+                    return;
+                }
+                
+                var pass = false;
+                
+                if(child_qty === '0'){
+                    pass = true;
+                }else{
+                    var buttons = $("#children_age_list").find("li button");
+                    for(var i=0; i<buttons.length; i++ ){
+
+                        if($(buttons[i]).attr('child-age') === undefined){
+                            pass = false;
+                            break;
+                        }else{
+                            children_age.push($(buttons[i]).attr('child-age'));
+                            pass = true;
+                        }
+                    }
+                }
+                
+                if(pass === true){
+                    UIkit.modal("#modal-sections").hide();
+                                        
+                    $("#adult_count").val(adult_qty);
+                    $("#children_count").val(child_qty);
+                    $("#children_age").val(children_age);
+                    
+                    $("#select_room").submit();
+                }else{
+                    UIkit.modal.alert("Please select children's age!").then(function () {
+                        UIkit.modal("#modal-sections").show();
+                    });
+                }
+                
+            });
+        
+        
+            $( "#adult_qty a.dropdown-item" ).on( "click", function() {
+                $('#adult_qty button').text($(this).text()+" adults");
+                $('#adult_qty button').attr('adult-qty', $(this).attr('adult-qty'));
+            });
+            
+            $( "#child_qty a.dropdown-item" ).on( "click", function() {
+
+                var adult_qty = $('#adult_qty button').attr('adult-qty');
+                var child_qty = $(this).attr('child-qty');
+                
+                if(adult_qty < child_qty){
+                    UIkit.modal.alert('The number of children is greater than allowed. If you are traveling with many children, please call us to make a reservation. Tel: +976 8002-5000, +976 8003-5000').then(function () {
+                        UIkit.modal("#modal-sections").show();
+                    });
+                    
+                    
+                }else{
+                    $('#child_qty button').text($(this).text()+" children");
+                    $('#child_qty button').attr('child-qty', child_qty);
+                
+                    if(child_qty === 0){
+                        $("#modal-sections ul#children_age_list li").remove();
+                    }else{
+                        $("#modal-sections ul#children_age_list li").remove();
+                        for(var i=0; i < child_qty; i++){
+                            $("#modal-sections ul#children_age_list").append($(
+                                '<li><div class="col-12" style="height:40px; margin-bottom: 10px;">'
+                                        +'<div class="col-6" style="float:left; height: 100%; padding-top: 5px;">Children '+(i+1)+'</div>'
+                                            +'<div id="dataTable_filter" class="dataTables_filter">'
+                                              +'<div class="btn-group hotel-create-dropdown" id="child_age">'
+                                                  +'<button val="-1" child-group="'+(i)+'" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Age</button>'
+                                                  +'<div class="dropdown-menu">'
+                                                    {% for i in 0..6 %}
+                                                        +'<a class="dropdown-item" href="#" child-age="{{i}}">{{i}}</a>'
+                                                    {% endfor %}
+                                                    +'<a class="dropdown-item" href="#" child-age="7">Above 7</a>'
+                                                  +'</div></div></div></div></li>'
+
+                                ));
+
+                        }
+
+                         $("#children_age_list li a.dropdown-item").on( "click", function() {
+                                $(this).parent().siblings("button").text($(this).text()+" years old");
+                                $(this).parent().siblings("button").attr('child-age', $(this).attr('child-age'));
+
+                                {#$('#children_age_list li child_'+$(this).text()+'_age button').text($(this).text()+" years old");
+                                var child_age = $(this).attr('child-'+(i+1)+'-years old');
+                                $('#children_age_list li button').attr('child-'+(i+1)+'-age', child_age);#}
+
+                            });
+                    }
+                }
+                
+            });
+
+            var jssor_1_SlideshowTransitions = [
+              {$Duration:800,x:0.3,$During:{$Left:[0.3,0.7]},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:-0.3,$SlideOut:true,$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:-0.3,$During:{$Left:[0.3,0.7]},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:0.3,$SlideOut:true,$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,y:0.3,$During:{$Top:[0.3,0.7]},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,y:-0.3,$SlideOut:true,$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,y:-0.3,$During:{$Top:[0.3,0.7]},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,y:0.3,$SlideOut:true,$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:0.3,$Cols:2,$During:{$Left:[0.3,0.7]},$ChessMode:{$Column:3},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:0.3,$Cols:2,$SlideOut:true,$ChessMode:{$Column:3},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,y:0.3,$Rows:2,$During:{$Top:[0.3,0.7]},$ChessMode:{$Row:12},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,y:0.3,$Rows:2,$SlideOut:true,$ChessMode:{$Row:12},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,y:0.3,$Cols:2,$During:{$Top:[0.3,0.7]},$ChessMode:{$Column:12},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,y:-0.3,$Cols:2,$SlideOut:true,$ChessMode:{$Column:12},$Easing:{$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:0.3,$Rows:2,$During:{$Left:[0.3,0.7]},$ChessMode:{$Row:3},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:-0.3,$Rows:2,$SlideOut:true,$ChessMode:{$Row:3},$Easing:{$Left:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:0.3,y:0.3,$Cols:2,$Rows:2,$During:{$Left:[0.3,0.7],$Top:[0.3,0.7]},$ChessMode:{$Column:3,$Row:12},$Easing:{$Left:$Jease$.$InCubic,$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,x:0.3,y:0.3,$Cols:2,$Rows:2,$During:{$Left:[0.3,0.7],$Top:[0.3,0.7]},$SlideOut:true,$ChessMode:{$Column:3,$Row:12},$Easing:{$Left:$Jease$.$InCubic,$Top:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,$Delay:20,$Clip:3,$Assembly:260,$Easing:{$Clip:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,$Delay:20,$Clip:3,$SlideOut:true,$Assembly:260,$Easing:{$Clip:$Jease$.$OutCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,$Delay:20,$Clip:12,$Assembly:260,$Easing:{$Clip:$Jease$.$InCubic,$Opacity:$Jease$.$Linear},$Opacity:2},
+              {$Duration:800,$Delay:20,$Clip:12,$SlideOut:true,$Assembly:260,$Easing:{$Clip:$Jease$.$OutCubic,$Opacity:$Jease$.$Linear},$Opacity:2}
+            ];
+
+            var jssor_1_options = {
+              $AutoPlay: 0,
+              $SlideshowOptions: {
+                $Class: $JssorSlideshowRunner$,
+                $Transitions: jssor_1_SlideshowTransitions,
+                $TransitionsOrder: 1
+              },
+              $ArrowNavigatorOptions: {
+                $Class: $JssorArrowNavigator$
+              },
+              $ThumbnailNavigatorOptions: {
+                $Class: $JssorThumbnailNavigator$
+              }
+            };
+
+            var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options);
+
+            /*#region responsive code begin*/
+
+            var MAX_WIDTH = 980;
+
+            function ScaleSlider() {
+                var containerElement = jssor_1_slider.$Elmt.parentNode;
+                var containerWidth = containerElement.clientWidth;
+
+                if (containerWidth) {
+
+                    var expectedWidth = Math.min(MAX_WIDTH || containerWidth, containerWidth);
+
+                    jssor_1_slider.$ScaleWidth(expectedWidth);
+                }
+                else {
+                    window.setTimeout(ScaleSlider, 30);
+                }
+            }
+
+            ScaleSlider();
+
+            $(window).bind("load", ScaleSlider);
+            $(window).bind("resize", ScaleSlider);
+            $(window).bind("orientationchange", ScaleSlider);
+            /*#endregion responsive code end*/
+        });
+        
+        
+    </script>
+{% endblock %}

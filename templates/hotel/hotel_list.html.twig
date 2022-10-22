@@ -1,0 +1,120 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/css/hotel_list.css">
+    <style>
+        .filter_active{
+            background-color: #007bff;
+        }
+        .filter_active p{
+            color: #fff;
+        }
+        .header-brand-logo p{
+            font-family: Roboto Condensed;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 20px;
+            line-height: normal;
+            color: #fff;
+            margin: 12px 0 0 20px;
+        }
+    </style>
+{% endblock %}
+
+
+{% block navbar %}  
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="top-search">
+                <a href="{{ path('home') }}" class="search-toggle"><i class="fa fa-arrow-left fa-lg"></i></a>
+            </div>
+            <div class="header-brand-logo">
+                <p>Travel List</p>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+    
+{% block body %}
+
+    {% if result is not null %}
+    
+        <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slider>
+            <ul class="uk-slider-items uk-child-width-1-4 uk-child-width-1-5@s uk-child-width-1-6@m">
+                {% if date_set|length > 1 %}
+                    <li>
+                        <a href={{path('get_hotel',{city_id: city_id, country_id:country_id} )}}>
+                            <div class="uk-position-center uk-panel list-date">
+                                <p class="list-date-date" style="color: #757775;">All</p>
+                                <p class="list-date-date" style="color: #757775;">travels</p>
+                            </div>
+                        </a>
+                    </li>
+                {%endif%}
+                {% for item in date_set %}
+                    <li>
+                        <a href={{path('get_hotel',{city_id: city_id, country_id:country_id} )}}?date={{item.departure_datetime|date("Y-m-d")}}>
+                            <div class="uk-position-center uk-panel list-date">
+                                <p class="list-date-month" style="color: #757775;">{{item.departure_datetime|date("m")}} сар</p>
+                                <p class="list-date-day" style="font-size: xx-large; font-weight: bold; color: #757775;">{{item.departure_datetime|date("d")}}</p>
+                                {#<p class="list-date-date">Өнөөдөр</p>#}
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div style="padding-bottom: 60px!important;">
+            <div style="background-color: #fff; margin-top: 10px;" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+                <p style="color: #0075ff; font-family: Roboto Condensed; padding: 5px; margin: 0; width: 100%; text-align: center;"><span uk-icon="info"></span> The price below is a package price for 2 people.</p>
+            </div>
+        {% for item in result %}
+                <a class="wrapper-uk-card" href="{{ path('get_hotel_detail', {'hotel_id': item.hotel_id, 'trip_id': item.trip_id, 'is_special': item.is_special} ) }}">
+                    <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+
+                            <div class="uk-card-media-left uk-cover-container">
+                                <img src="{{ asset('leisure/images/hotel/') ~ item.hotel_img }}" alt="" uk-cover>
+                                <canvas width="600" height="400"></canvas>
+                            </div>
+                            <div class="list-content">
+                                <div class="uk-card-body">
+                                    <div class="rating">
+                                        {% for i in 1..item.hotel_star %}
+                                            <i class="fa fa-star voted"></i>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <h1 class="uk-card-title">{{ item.hotel_name }}</h1>
+                                    <div class="list-info">
+                                        <p class="hlist-date">{{ item.departure_datetime|date("Y.m.d") }} - {{ item.arrival_datetime|date("Y.m.d") }}</p>
+                                        <p class="hlist-time">
+                                            <span><i class="fa fa-plane fa-lg"></i></span>
+                                            <span style="padding-left:5px;">{{ item.departure_datetime|date("g:ia") }}</span>
+                                            <span style="padding-left:5px;">{{item.night_count}} nights
+                                                {% if item.night_count_plus is not null %}
+                                                    ( +{{ item.night_count_plus }} )
+                                                {% endif %}
+                                            </span>
+                                        </p>
+                                        {#<p class="hlist-price"><i class="fa fa-male"></i><i class="fa fa-male"></i><span> Үнэ:</span><span style="padding-left:5px;">{{ item.price_bb|number_format }}₮</span></p>#}
+                                        <p class="hlist-price"><span>2 person: </span><span>{{ item.price_bb|number_format }} MNT</span></p>
+                                    </div>
+                                    <div>
+                                        <i class="fa fa-chevron-right fa-lg"></i>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </a>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+            <p class="no-result">Sorry, there are currently no registered trips.</p>
+        </div>
+    {% endif %}
+
+{% endblock %}
+

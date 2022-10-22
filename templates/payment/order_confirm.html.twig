@@ -1,0 +1,311 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/css/hotel_detail.css">
+    <style>
+        .wrapper{
+            padding-bottom: 60px;
+        }
+        .uk-modal-header{
+            padding: 10px 30px;
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .uk-modal-footer {
+            padding: 5px 20px;
+        }
+        #modal-content{
+            margin: auto;
+        }
+        .uk-modal-header h3, .uk-modal-header p{
+            text-align: center;
+            margin-top: 0px;
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+        }
+        {#.wrapper, .uk-modal-header {
+            height: -webkit-fill-available;
+        }#}
+        .uk-button-primary{
+            color: #fff!important;
+        }
+        .checkbox {
+            padding-left: 20px;
+            padding-right: 10px;
+            padding-top: 15px;
+            width: 70%;
+            float: left;
+        }
+        .uk-modal-header h3, .uk-modal-header p{
+            text-align: center;
+            margin-top: 0px;
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+        }
+        {##pay_amount{
+            font-size: xx-large; font-weight: 800;
+        }#}
+        .button-and-ds, .button-and-ds-f {
+            background: rgb(245,124,0);
+            color: #fff;
+            border: 0;
+            height: 48px;
+            font-weight: 400;
+            border-radius: 4px;
+            font-size: 17px;
+            line-height: 20px;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        }
+        .uk-modal-header{
+            border-bottom: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block navbar %}  
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="top-search">
+                <a href="{{ path('get_room_list', {hotel_id: hotel_id, trip_id: trip_id, is_special: is_special, adult_count: adult_count, children_count: children_count, children_age: children_age} ) }}" class="search-toggle"><i class="fa fa-arrow-left fa-lg"></i></a>
+            </div>
+            <div class="header-brand-logo">
+                <p>Payment confirmation</p>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+
+{% block body %}
+<div class="wrapper">
+    <div class="uk-modal-header">
+        <img src="../../leisure/images/confirm.png" class="center"/>
+        <h4 style="text-align: center; margin: 5px 0 10px 0; font-weight: bold;">
+            Booking confirmation
+        </h4>
+        <table style="width: 100%; margin: auto;">
+            <tr class="table-value">
+                <td style="width: 10%; text-align: left; font-size: 14px;"><i class="fa fa-user "></i></td>
+                <td style="width: 30%; text-align: left; font-size: 14px;">Adults: </td>
+                <td style="width: 60%; text-align: left; font-size: 14px;" id="adult_qty"></td>
+            </tr>
+            <tr class="table-value">
+                <td style="width: 10%; text-align: left; font-size: 14px;"><i class="fa fa-user"></i></td>
+                <td style="width: 30%; text-align: left; font-size: 14px;">Children: </td>
+                <td style="width: 60%; text-align: left; font-size: 14px;" id="child_qty"></td>
+            </tr>
+            {% if car_direction is not null and car_direction != '' %}
+                <tr class="table-value">
+                    <td style="width: 10%; text-align: left; font-size: 14px;"><i class="fa fa-car"></i></td>
+                    <td style="width: 30%; text-align: left; font-size: 14px;">Rent car: </td>
+                    <td style="width: 60%; text-align: left; font-size: 14px;" id="car_info">
+                        {{car_direction}}, {{car_way}} way
+                    </td>
+                </tr>
+            {% endif %}
+            <tr class="table-value">
+                <td style="width: 10%; text-align: left; font-size: 14px;"><i class="fa fa-envelope"></i></td>
+                <td colspan="2" style="width: 90%; text-align: left; font-size: 14px;">
+                    {% if user_info is not null and user_info != '' %}
+                        {% for item in user_info %}
+                            <input type="hidden" name="user_id" id="user_id" value="{{item.id}}"/>
+                            {% if item.email is not null %}
+                                <input name="email" id="email" value="{{item.email}}" style="width: 70%;" class="uk-input uk-form-small" type="text" placeholder="Email">                                
+                            {% else %}
+                                <input name="email" id="email" value="" style="width: 70%;" class="uk-input uk-form-small" type="text" placeholder="Email">
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <input name="email" id="email" value="" style="width: 70%;" class="uk-input uk-form-small" type="text" placeholder="Email">
+                    {% endif %}
+                    <button id="email_ok" class="uk-button uk-button-primary uk-button-small">OK</button>
+                </td>
+            <tr class="table-value">
+                <td colspan="3" style="width: 100%; text-align: left; font-size: 12px;">Please confirm your email and <span style="color: #1e87f0;">click ОК</span>!</td>
+            </tr>
+            </tr>
+        </table>
+    </div>
+    <div class="uk-modal-footer">
+        <table style="width: 95%; margin: auto; font-size: 14px;">
+            <tr>
+                <td>Travel to {{trip_info.city_name}}, {{trip_info.country_name}}:</td>
+                <td id="trip_amount" style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td>Rent car booking:</td>
+                <td id="car_amount" style="text-align: right;"></td>
+            </tr>
+            <tr>
+                <td style="font-size: 18px;font-weight: 800;">Total Price:</td>
+                <td id="pay_amount" style="text-align: right;font-size: 18px;font-weight: 800;"></td>
+            </tr>
+        </table>
+        {#<p style="text-align: center; font-size: 18px; margin-top: 5px;">
+            <span id="pay_amount"></span>
+        </p>#}
+    </div>
+    <div class="uk-modal-footer">
+        <div class="checkbox checkbox-success" style="float:none; width: 100%">
+            <input id="tc_confirm" class="styled" type="checkbox">
+            <label for="tc_confirm">
+                I agree with the <a uk-toggle href="#modal-overflow" style="color: #1e87f0; text-decoration: underline;">Terms of Service</a>.
+            </label>
+        </div>
+    </div>
+    <div class="uk-modal-footer uk-text-right" id="and-ds" style="padding-top: 20px;padding-bottom: 20px;">
+    </div>
+    
+</div>
+    
+<div id="modal-overflow" uk-modal>
+    <div class="uk-modal-dialog">
+
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">Terms of Service</h3>
+        </div>
+        <div class="uk-modal-body s-terms" uk-overflow-auto>
+            {% include '/payment/service_terms.html.twig' %}
+        </div>
+
+        <div class="uk-modal-footer uk-text-right">
+            <button class="uk-button uk-button-default uk-modal-close" type="button">Close</button>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script src="http://cdn.lend.mn/3rdparty/embedded/and-ds.js#1.0.1" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        jQuery(document).ready(function () {
+            setData();
+        });
+        var flag;
+        function setData(){
+            
+            $("#and-ds div").remove();
+            $("#pay_amount").text(formatNumber('{{total_amount}}')+" MNT");
+            $("#trip_amount").text(formatNumber('{{trip_amount}}')+" MNT");
+            $("#adult_qty").text('{{adult_count}}');
+            
+            var camount = {{car_total_amount}};
+            if(camount > 0){
+                $("#car_amount").text(formatNumber(camount)+" MNT");
+            }else{
+                $("#car_amount").text("No info");
+            }
+            
+            var children_count = parseInt('{{children_count}}'); 
+            if(children_count != null && children_count != 0){
+                $("#child_qty").text(children_count +" ( Age {{children_age}} years old)");
+            }else{
+                $("#child_qty").text(0);
+            }
+            
+            {% if is_prod == true %}
+                ANDDS.button({
+                    "container": "and-ds",
+                    "invoiceNumber" : '{{invoice_number}}',
+                    "amount" : '{{total_amount}}',
+                    "qr_string": '{{qr_string}}',
+                    "qr_link": '{{qr_link}}',
+                });
+                
+            {% else %}
+                $("#and-ds").append('<div class="button-and-ds">Proceed</div>');
+                $(".button-and-ds").click(function(){
+                    document.location.href = "{{ path('app_webhook', { invoice_number:invoice_number, total_amount:total_amount } ) }}";
+                });
+            {% endif %}
+
+            $(".button-and-ds").hide();
+            $("#and-ds").append('<div class="button-and-ds-f">Proceed</div>');
+            
+            $(".button-and-ds-f").click(function(){
+                if($( "#tc_confirm:checked" ).length < 1){
+                    UIkit.modal.alert('You must read and agree to the terms of service.');
+                }else if(flag === undefined || flag === null || flag < 1){
+                    UIkit.modal.alert('You need to confirm your email address to receive travel bookings. Make sure your email address is correct and click OK.');
+                }
+            });
+         
+            $("#tc_confirm").change( function() {                
+                if($( "#tc_confirm:checked" ).length > 0 && flag !== undefined && flag !== null && flag > 0){
+                    $(".button-and-ds").show();
+                    $(".button-and-ds-f").hide();
+                }else{
+                    $(".button-and-ds").hide();
+                    $(".button-and-ds-f").show();
+                }
+            });
+            
+            $("#email_ok").click(function(){
+                if($("#email").val() === undefined || $("#email").val() === null || $("#email").val() === ''){
+                    UIkit.modal.alert('You will need to enter your email address to receive travel bookings. Please enter your email.');
+                }else{
+                    var param = {
+                        user_id : $("#user_id").val(),
+                        email : $("#email").val(),
+                    };
+
+                    sendAjaxRequest('{{path('update_email')}}', param, function(data, status, xhr){
+                        if(status === 'success'){
+                            console.log('status: ' + status);
+                            console.log(data);
+                            
+                            if(data.result > 0){
+                                UIkit.modal.alert('Your email has been verified.');
+                                
+                                $("#email_ok").removeClass("uk-button-primary");
+                                $("#email_ok").addClass("uk-button-default");
+                                
+                                if($( "#tc_confirm:checked" ).length > 0){
+                                    $(".button-and-ds").show();
+                                    $(".button-and-ds-f").hide();
+                                }else{
+                                    flag = data.result;
+                                    $(".button-and-ds").hide();
+                                    $(".button-and-ds-f").show();
+                                }
+                            }else{
+                                UIkit.modal.alert('Failed to save email info. Status:'+status+', Data:'+data);
+                            }
+                        }else{
+                            console.log('status: ' + status + ', data: ');
+                            console.log(data);
+                            UIkit.modal.alert('Failed to save email info. Status:'+status+', Data:'+data);
+                        }
+                    }, function(jqXhr, textStatus, errorMessage){
+                        console.log('Error' + errorMessage);
+                        UIkit.modal.alert('Failed to save email info. Error message:'+errorMessage);
+                    });
+                }
+            });
+   
+            
+        }
+            
+        function formatNumber(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+        }
+    </script>
+    
+{% endblock %}

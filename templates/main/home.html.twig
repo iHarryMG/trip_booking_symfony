@@ -1,0 +1,243 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/css/home.css">
+    <style>
+        #modal-sections ul li{
+            list-style: none;
+        }
+        #modal-sections ul{
+            padding-left: 0;
+        }
+        .uk-modal-body {
+            padding: 30px 10px 20px 10px;
+        }
+        .search_item1 .fa-search, .search_item1 .fa-calendar{
+            margin-top: 10px;
+            color: #007bff;
+        }
+        .top-search a{
+            padding: 0;
+            width: 30px;
+        }
+        .search_item1 button{
+            width: 100%;
+        }
+        #content-wrapper{
+            padding-bottom: 60px;
+        }
+        .form-row {
+            margin-right: -5px;
+            margin-left: 0px;
+        }
+        .uk-panel {
+            padding: 10px 5px 5px 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block navbar %}    
+    <header id="header">
+        <nav class="navbar navbar-expand-md bg-dark mb-3 col-12 col-md-12">
+            <div class="header-brand-logo">
+                <a href="#">
+                    <img class="logo" src="leisure/images/logo_white.png" style="padding-left: 30px;">
+                </a>
+            </div>
+            <div class="top-search">
+                <a href="#modal-sections" class="search-toggle uk-button" uk-toggle><i class="fa fa-search"></i></a>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+
+{% block body %}
+    
+    <div class="banner-container uk-position-relative uk-visible-toggle uk-light" tabindex="-1" uk-slider>
+        
+        {{ render(controller('App\\Controller\\MainController::getBannerList', {'is_special': 1, 'is_active': 1 })) }}
+    
+    </div>
+{% if result is not null %}
+    <div id="content-wrapper">        
+    {% for item in result %}
+    
+        <div class="jumbotron col-12 col-md-12">
+            <div class="jumbotron-title">
+                <img src='{{ asset('leisure/images/flag/') ~ item.country_img }}' alt="">
+                
+                <p>{{ item.country_name }}</p>
+            </div>
+            <div uk-slider class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
+
+                {{ render(controller('App\\Controller\\MainController::getCity', {'country_id': item.id , 'is_one_item': item.is_one_item })) }}
+
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    <div id="modal-sections" uk-modal>
+        <div class="uk-modal-dialog">
+            <button class="uk-modal-close-default" type="button" uk-close></button>
+            <div class="uk-modal-header" style="height: 45px;">
+            </div>
+            <div class="uk-modal-body">
+                <ul id="person-count">
+                    <li>
+                        <div class="form-row col-13">
+                            <div class="form-group search_item1 col-1">
+                                <i class="fa fa-search"></i>
+                            </div>
+                            <div class="form-group search_item1 col-5" id="inputCountry">
+                                <button country-id="" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Select country
+                                </button>
+                                <div class="dropdown-menu">
+                                    {% if countryList is not null %}
+                                        {% for country in countryList %}
+                                            <a class="dropdown-item" country-id="{{country.id}}">{{country.country_name}}</a>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="form-group search_item1 col-5" id="inputCity">
+                                <button disabled city-id="" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Select city
+                                </button>
+                                <div class="dropdown-menu">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="form-row col-13">
+                            <div class="form-group search_item1 col-1">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                            <div class="form-group search_item1 col-10" id="inputDate">
+                                <button disabled selected-date="" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Select date
+                                </button>
+                                <div class="dropdown-menu">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                                
+            </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button disabled id='search_ok' class="uk-width-1-1 uk-button uk-button-primary" type="button">Search</button>
+            </div>
+        </div>
+    </div>
+    <form id="search_trip" action="">                                
+        <input type="hidden"  name="country_id" id="country_id" value="{{countryList[0].id}}"/>
+        <input type="hidden"  name="city_id" id="city_id" value=""/>
+        <input type="hidden"  name="date" id="selected_date" value=""/>
+    </form>
+{% else %}
+    <div class="jumbotron col-12 col-md-12">
+        <p class="no-result">Sorry, there are currently no travel information.</p>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    
+    <script type="text/javascript">
+
+        jQuery(document).ready(function ($) {
+            
+            $( "#inputCountry a.dropdown-item" ).on( "click", function() {
+                $('#inputCountry button').text($(this).text());
+                $('#country_id').val($(this).attr('country-id'));
+                
+                getCity($(this).attr('country-id'));
+                $('#inputCity button').prop('disabled', false);
+            });
+             
+             UIkit.util.on('#search_ok', 'click', function (e) {
+                e.preventDefault();
+                e.target.blur();
+              
+                var form_action = '/hotel/list/'+$("#city_id").val()+'/'+$("#country_id").val();
+                $("#search_trip").attr('action', form_action);
+                $("#search_trip").submit();
+            });
+             
+        });
+        
+        function getCity(country_id){
+            sendAjaxRequest('{{path('get_city_list')}}', {country_id: country_id }, function(data, status, xhr){
+                if(status === 'success'){
+                    $('#inputCity .dropdown-menu a').remove();
+                    $('#inputCity button').text('Хот сонгох');
+                    
+                    for (i = 0; i < $(data.cityNames).length; i++) {
+                        $('#inputCity .dropdown-menu').append( 
+                            $( '<a class="dropdown-item" city-id="'+data.cityNames[i].id+'">'+data.cityNames[i].city_name+'</a>' ) );
+                    }
+                    
+                    $( "#inputCity a.dropdown-item" ).on( "click", function() {
+                        $('#inputCity button').text($(this).text());
+                        $('#city_id').val($(this).attr('city-id'));
+                        
+                        getDate($('#country_id').val(), $('#city_id').val());
+                        $('#inputDate button').prop('disabled', false);
+                    });
+                }else{
+                    console.log('status: ' + status + ', data: ');
+                    console.log(data);
+                }
+            }, function(jqXhr, textStatus, errorMessage){
+                console.log('Error' + errorMessage);
+            });
+        }
+        
+        function getDate(country_id, city_id){
+            sendAjaxRequest('{{path('get_date_list')}}', {country_id: country_id, city_id: city_id }, function(data, status, xhr){
+                if(status === 'success'){
+                    console.log(data.dateList);
+                    
+                    $('#inputDate button').text('Select date');
+                    $('#inputDate .dropdown-menu a').remove();
+                    
+                    if($(data.dateList).length > 1){
+                        $('#inputDate .dropdown-menu').append( $( '<a class="dropdown-item" selected-date="">All travel</a>' ) );
+                    }
+                    
+                    if($(data.dateList).length > 0){
+                        for (i = 0; i < $(data.dateList).length; i++) {
+                            $('#inputDate .dropdown-menu').append( 
+                                $( '<a class="dropdown-item" selected-date="'
+                                    +data.dateList[i].start_date+'">'
+                                    +data.dateList[i].start_date+'</a>' ) );
+                        }
+                        
+                        $( "#inputDate a.dropdown-item" ).on( "click", function() {
+                            $('#inputDate button').text($(this).text());
+                            $('#selected_date').val($(this).attr('selected-date'));
+                            $('#search_ok').prop('disabled', false);
+                        });
+                    }else{
+                        $('#search_ok').prop('disabled', true);
+                        $('#inputDate .dropdown-menu a').remove();
+                        $('#inputDate .dropdown-menu').append( 
+                                $( '<a class="dropdown-item" selected-date="">No travel info</a>' ) );
+                        $('#inputDate button').text('No travel info');
+                    }
+
+                }else{
+                    console.log('status: ' + status + ', data: ');
+                    console.log(data);
+                }
+            }, function(jqXhr, textStatus, errorMessage){
+                console.log('Error' + errorMessage);
+            });
+        }
+    </script>
+{% endblock %}

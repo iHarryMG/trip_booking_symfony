@@ -1,0 +1,94 @@
+.uk-slider-items li{
+/*	border: 1px solid #f9f9f9;*/
+	height: 88px;
+	border-radius: .3rem;
+	margin: 0 5px 5px 0;
+	background: #FFFFFF;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+	color: #333;
+}
+.uk-slider{
+	margin: 0 15px;
+        padding-top: 10px;
+}
+.list-date p{
+	margin: 1px 0!important;
+	text-align: center;
+	font-family: Roboto Condensed;
+}
+.list-date-day{
+	font-size: 26px;
+	font-weight: bold;
+}
+
+.list-date-month, .list-date-date{
+	font-size: 14px;
+	font-weight: normal;
+}
+
+.uk-child-width-1-2\@s>* {
+    width: 60%;
+}
+.uk-card-media-left, .uk-card-media-left img{
+	width: 40%;
+	border-radius: .2rem;
+}
+.list-content{
+	height: 150px;
+}
+
+
+.rating .voted {
+    color: #FFD600;
+}
+.icon-star:before {
+    content: '\e80b';
+}
+.uk-card{
+    margin-left: 15px;
+    margin-right: 15px;
+    border-radius: .2rem;
+}
+.uk-card-default{
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.uk-card-body {
+    padding: 10px;
+	font-family: Roboto Condensed;
+	font-style: normal;
+	font-size: 14px;
+	line-height: 18px;
+	height: 100%;
+}
+.uk-card-title {
+    line-height: 1.4;
+	margin: 5px 0;
+	text-transform: uppercase;
+	font-family: Roboto Condensed;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 18px;
+}
+.uk-card-body p{
+	margin: 5px 0;
+}
+.hlist-price{
+	font-size: 18px;
+}
+
+.list-info{
+	position: absolute;
+    bottom: 5px;
+}
+
+.fa-chevron-right{
+	position: absolute;
+    bottom: 10px;
+    right: 15px;
+}
+
+a.wrapper-uk-card{
+    display: block;
+    margin-top: 20px!important;
+}

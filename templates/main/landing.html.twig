@@ -1,0 +1,38 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html, body {
+            background-color: #fff;
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 30%;
+        }
+        .splash_info{
+            width: 100%;
+            text-align: center;
+            font-family: Roboto Condensed;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 18px;
+            margin-top: 40px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+<div class="col-12 col-md-12">
+    <img src="../../leisure/images/attention.png" class="center"/>
+    <div class="splash_info">
+        Sorry, please use the service via a valid mobile app!
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
